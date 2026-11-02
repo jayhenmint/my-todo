@@ -1,5 +1,6 @@
 const form = document.querySelector('#todo-form');
 const input = document.querySelector('#todo-input');
+const search = document.querySelector('#search-input');
 const list = document.querySelector('#todo-list');
 const key = 'todo-list';
 let tasks;
@@ -16,7 +17,10 @@ function save() {
 }
 
 function render() {
-  list.replaceChildren(...tasks.map((task, index) => {
+  const query = search.value.trim().toLowerCase();
+  list.replaceChildren(...tasks.map((task, index) => ({ task, index }))
+    .filter(({ task }) => task.text.toLowerCase().includes(query))
+    .map(({ task, index }) => {
     const item = document.createElement('li');
     const checkbox = document.createElement('input');
     const text = document.createElement('span');
@@ -58,4 +62,5 @@ form.addEventListener('submit', event => {
   input.focus();
 });
 
+search.addEventListener('input', render);
 render();
